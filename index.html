@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Your Global Learning Companion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --purple: #A86DD1;
+            --blue: #5DADE2;
+            --dark: #2C3E50;
+            --light: #F8F9FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3);
+            background-size: 1800% 1800%;
+            animation: rainbowShift 18s ease infinite;
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        @keyframes rainbowShift {
+            0% { background-position: 0% 82%; }
+            50% { background-position: 100% 19%; }
+            100% { background-position: 0% 82%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.1) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(255, 230, 109, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        .unicorn {
+            position: fixed;
+            bottom: 20px;
+            left: -200px;
+            font-size: 8rem;
+            z-index: 40;
+            animation: unicornFloat 25s linear infinite;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
+        }
+
+        @keyframes unicornFloat {
+            0% { left: -200px; bottom: 20px; }
+            50% { left: 50vw; bottom: 30vh; }
+            100% { left: 110vw; bottom: 20px; }
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff00ff, 0 0 40px #00ffff;
+            animation: sparkleFloat 3s ease-in-out infinite;
+            z-index: 39;
+        }
+
+        .unicorn-2 {
+            position: fixed;
+            top: 15vh;
+            right: -200px;
+            font-size: 5rem;
+            z-index: 40;
+            animation: unicornFlyBack 35s linear infinite;
+            transform: scaleX(-1);
+            filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.7));
+        }
+
+        @keyframes unicornFlyBack {
+            0% { right: -200px; top: 15vh; }
+            50% { right: 50vw; top: 60vh; }
+            100% { right: 110vw; top: 15vh; }
+        }
+
+        .star {
+            position: fixed;
+            font-size: 1.2rem;
+            pointer-events: none;
+            z-index: 38;
+            animation: twinkle 2.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+        }
+
+        .rainbow-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
+            background-size: 200% 100%;
+            animation: barSlide 4s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes barSlide {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+            50% { opacity: 1; transform: translateY(-100px) scale(1); }
+        }
+
+        /* LOGIN MODAL */
+        #loginModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        #loginModal.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .login-tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .login-tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .login-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .login-form-group input, .login-form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .login-form-group input:focus, .login-form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(78,205,196,0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .login-tab-content {
+            display: none;
+        }
+
+        .login-tab-content.active {
+            display: block;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--light);
+            border-radius: 25px;
+            border: 2px solid var(--secondary);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent);
+            border-radius: 12px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background: white;
+            border: 2px solid var(--secondary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        nav button:hover, nav button.active {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* SANDBOX */
+        .sandbox-container {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .sandbox-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--blue));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .sandbox-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78,205,196,0.4);
+        }
+
+        /* Wheel */
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        #wheelCanvas {
+            border-radius: 50%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #wheelCanvas:hover {
+            transform: scale(1.02);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        input[type="text"], input[type="date"], input[type="number"], textarea {
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            background: var(--light);
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(78,205,196,0.3);
+            background: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--blue));
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #FFA07A);
+            color: var(--dark);
+        }
+
+        .wheel-item-tag {
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 2px solid var(--secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.25rem;
+        }
+
+        .wheel-item-tag button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Homework */
+        .homework-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .homework-item {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .homework-item.completed {
+            opacity: 0.6;
+            border-left-color: var(--secondary);
+        }
+
+        .homework-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .homework-subject {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent);
+            color: var(--dark);
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .homework-due {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Timer */
+        .timer-time {
+            font-family: 'Space Mono', monospace;
+            font-size: 6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--blue));
+            transition: width 0.5s ease;
+        }
+
+        /* Math */
+        .problem-display {
+            background: var(--light);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark);
+            font-family: 'Space Mono', monospace;
+            border: 3px dashed var(--secondary);
+            margin-bottom: 2rem;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto 2rem auto;
+            text-align: center;
+            font-size: 2rem;
+            padding: 1rem;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 1rem 2rem;
+            background: var(--light);
+            border-radius: 15px;
+            border: 2px solid var(--secondary);
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* English */
+        .word-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 3px solid var(--accent);
+        }
+
+        .word-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .word-definition {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 1rem auto;
+        }
+
+        .word-example {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            font-style: italic;
+            color: var(--purple);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+            border-left: 5px solid var(--secondary);
+        }
+
+        @keyframes slideOut {
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .timer-time { font-size: 4rem; }
+            .problem-display { font-size: 2rem; padding: 2rem; }
+            .word-display { font-size: 2rem; }
+            .sandbox-container { height: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Unicorn & Sparkles -->
+    <div class="rainbow-bar"></div>
+    <div class="unicorn">🦄</div>
+    <div class="unicorn-2">🦄</div>
+    <div class="star" style="left: 5%; top: 10%;">⭐</div>
+    <div class="star" style="left: 25%; top: 85%; animation-delay: 0.7s;">✨</div>
+    <div class="star" style="left: 60%; top: 8%; animation-delay: 1.4s;">🌟</div>
+    <div class="star" style="left: 92%; top: 75%; animation-delay: 2s;">💫</div>
+    <div class="sparkle" style="left: 10%; top: 20%;"></div>
+    <div class="sparkle" style="left: 30%; top: 40%; animation-delay: 0.5s;"></div>
+    <div class="sparkle" style="left: 50%; top: 15%; animation-delay: 1s;"></div>
+    <div class="sparkle" style="left: 70%; top: 60%; animation-delay: 1.5s;"></div>
+    <div class="sparkle" style="left: 85%; top: 35%; animation-delay: 2s;"></div>
+    <div class="sparkle" style="left: 20%; top: 70%; animation-delay: 2.5s;"></div>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal">
+        <div class="login-box">
+            <div class="login-title">🎓 StudyHub</div>
+            
+            <div class="login-tabs">
+                <button class="login-tab-btn active" onclick="switchLoginTab('login')">Login</button>
+                <button class="login-tab-btn" onclick="switchLoginTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Login Tab -->
+            <div id="loginTab" class="login-tab-content active">
+                <div class="login-form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <button class="login-btn" onclick="handleLogin()">Login</button>
+                <p style="text-align: center; color: #999; font-size: 0.9rem; margin-top: 1rem;">
+                    📱 Demo: demo@student.com or demo@teacher.com
+                </p>
+            </div>
+
+            <!-- Signup Tab -->
+            <div id="signupTab" class="login-tab-content">
+                <div class="login-form-group">
+                    <label>Name</label>
+                    <input type="text" id="signupName" placeholder="Your name">
+                </div>
+                <div class="login-form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com">
+                </div>
+                <div class="login-form-group">
+                    <label>I am a...</label>
+                    <select id="accountType">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <button class="login-btn" onclick="handleSignup()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <header>
+        <div class="header-content">
+            <div class="logo">🎓 StudyHub</div>
+            <nav>
+                <button class="nav-btn active" data-section="home">Home</button>
+                <button class="nav-btn" data-section="wheel">Spin Wheel</button>
+                <button class="nav-btn" data-section="homework">Homework</button>
+                <button class="nav-btn" data-section="timer">Focus Timer</button>
+                <button class="nav-btn" data-section="math">Math Practice</button>
+                <button class="nav-btn" data-section="english">English Practice</button>
+                <button class="nav-btn" data-section="science">Science Practice</button>
+                <button class="nav-btn" data-section="history">History Practice</button>
+                <button class="nav-btn" data-section="social">Social Studies</button>
+                <button class="nav-btn" data-section="achievements">Achievements</button>
+                <button class="nav-btn" data-section="flashcards">Flashcards</button>
+                <button class="nav-btn" id="sandboxNav" data-section="sandbox" style="display:none;">🔧 Sandbox</button>
+            </nav>
+            <div class="user-info">
+                <span id="userName"></span>
+                <span class="user-role" id="userRole"></span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home -->
+        <section id="home" class="section active">
+            <div class="card">
+                <h2>👋 Welcome to StudyHub!</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8; color: #666; margin-bottom: 2rem;">
+                    Your ultimate learning companion for students around the world. Master math, improve your English, track homework, and stay focused with our interactive tools!
+                </p>
+                <div class="grid-2">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalHomework">0</div>
+                        <div class="stat-label">Homework Items</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary), var(--blue));">
+                        <div class="stat-number" id="totalStudyTime">0</div>
+                        <div class="stat-label">Minutes Studied</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.5rem; margin: 2rem 0 1rem 0;">✨ Features!</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <div class="feature-title">Achievement System</div>
+                        <div class="feature-desc">Earn badges by hitting milestones. Unlock achievements as you learn!</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📇</div>
+                        <div class="feature-title">Smart Flashcards</div>
+                        <div class="feature-desc">Create custom flashcards for any subject. Perfect for memorization!</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Detailed Statistics</div>
+                        <div class="feature-desc">Track your learning progress with visual graphs and insights.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">Study Goals</div>
+                        <div class="feature-desc">Set daily goals and watch your progress grow!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin Wheel -->
+        <section id="wheel" class="section">
+            <div class="card">
+                <h2>🎡 Spin the Wheel Maker</h2>
+                <div class="wheel-container">
+                    <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                    <div class="input-group">
+                        <input type="text" id="wheelItemInput" placeholder="Enter item...">
+                        <button class="btn btn-secondary" onclick="addWheelItem()">Add Item</button>
+                    </div>
+                    <div>
+                        <button class="btn" onclick="spinWheel()">🎲 SPIN!</button>
+                        <button class="btn btn-accent" onclick="resetWheel()">Reset Wheel</button>
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <div id="wheelItemsList"></div>
+                    </div>
+                    <div id="wheelResult" style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: 1rem;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Homework -->
+        <section id="homework" class="section">
+            <div class="card">
+                <h2>📚 Homework Tracker</h2>
+                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                    <input type="text" id="hwTitle" placeholder="Assignment Title">
+                    <input type="text" id="hwSubject" placeholder="Subject">
+                    <textarea id="hwDescription" rows="3" placeholder="Description..."></textarea>
+                    <input type="date" id="hwDueDate">
+                    <button class="btn" onclick="addHomework()">Add Assignment</button>
+                </div>
+                <div class="homework-list" id="homeworkList"></div>
+            </div>
+        </section>
+
+        <!-- Timer -->
+        <section id="timer" class="section">
+            <div class="card">
+                <h2>⏱️ Focus Timer</h2>
+                <div class="timer-time" id="timerDisplay">25:00</div>
+                <div style="text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 2rem;" id="timerLabel">Ready to focus!</div>
+                <div class="timer-controls">
+                    <button class="btn" onclick="startTimer()">▶️ Start</button>
+                    <button class="btn btn-secondary" onclick="pauseTimer()">⏸️ Pause</button>
+                    <button class="btn btn-accent" onclick="resetTimer()">🔄 Reset</button>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                    <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;" onclick="setTimer(25)">25 min</button>
+                    <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;" onclick="setTimer(15)">15 min</button>
+                    <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;" onclick="setTimer(5)">5 min</button>
+                    <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;" onclick="setTimer(45)">45 min</button>
+                </div>
+                <div class="progress-bar" style="margin-top: 2rem;">
+                    <div class="progress-fill" id="timerProgress"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Math -->
+        <section id="math" class="section">
+            <div class="card">
+                <h2>➕ Math Practice</h2>
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <select id="mathLevel" onchange="generateMathProblem()" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem;"><option value="1">Grade 1</option><option value="2">Grade 2</option><option value="3">Grade 3</option><option value="4" selected>Grade 4</option><option value="5">Grade 5</option><option value="6">Grade 6</option><option value="7">Grade 7</option><option value="8">Grade 8</option><option value="9">Grade 9</option></select>
+                </div>
+                <div class="problem-display" id="mathProblem">Click "New Problem" to start!</div>
+                <input type="number" class="answer-input" id="mathAnswer" placeholder="Your answer..." step="0.01">
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn" onclick="checkMathAnswer()">Check Answer</button>
+                    <button class="btn btn-secondary" onclick="generateMathProblem()">New Problem</button>
+                    <button class="btn btn-accent" onclick="resetMathScore()">Reset Score</button>
+                </div>
+                <div class="score-display">
+                    <div class="score-item">
+                        <div class="score-value" id="mathCorrect">0</div>
+                        <div style="color: #666; margin-top: 0.5rem;">Correct</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="mathTotal">0</div>
+                        <div style="color: #666; margin-top: 0.5rem;">Total</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value" id="mathAccuracy">0%</div>
+                        <div style="color: #666; margin-top: 0.5rem;">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- English -->
+        <section id="english" class="section">
+            <div class="card">
+                <h2>📖 English Vocabulary</h2>
+                <label style="font-size: 1.1rem; font-weight: 600; margin-right: 1rem;">Grade Level:</label>
+                <select id="vocabLevel" onchange="showNewWord()" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem;">
+                    <option value="elementary">Elementary (K-5)</option>
+                    <option value="middle" selected>Middle School (6-8)</option>
+                    <option value="high">High School (9-12)</option>
+                    <option value="advanced">Advanced/College</option>
+                </select>
+                <div class="word-card">
+                    <div class="word-display" id="vocabWord">Click "New Word" to start!</div>
+                    <div class="word-definition" id="vocabDefinition"></div>
+                    <div class="word-example" id="vocabExample"></div>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn" onclick="showNewWord()">New Word</button>
+                    <button class="btn btn-secondary" onclick="toggleDefinition()">Show/Hide Definition</button>
+                    <button class="btn btn-accent" onclick="speakWord()">🔊 Pronounce</button>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <div class="score-item" style="display: inline-block;">
+                        <div class="score-value" id="wordsLearned">0</div>
+                        <div style="color: #666; margin-top: 0.5rem;">Words Learned</div>
+                    </div>
+                </div>
+            </div>
+                    <!-- English Quiz (inside English section) -->
+            <div class="card">
+                <h2>📝 English Quiz</h2>
+                <select id="quizLevel" onchange="showEnglishQuiz()" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem; margin-bottom: 1rem;">
+                    <option value="elementary">🌱 Elementary (K-5)</option>
+                    <option value="middle" selected>⭐ Middle School (6-8)</option>
+                    <option value="high">🔥 High School (9-12)</option>
+                    <option value="advanced">🚀 Advanced / College</option>
+                </select>
+                <div class="problem-display" id="quizQuestion">Pick a level, then click "New Question"!</div>
+                <div id="quizOptions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;"></div>
+                <div id="quizResult" style="text-align: center; font-size: 1.3rem; font-weight: 600; min-height: 2rem;"></div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="showEnglishQuiz()">New Question</button>
+                </div>
+            </div>
+</section>
+
+        <!-- 🔬 Science Practice -->
+        <section id="science" class="section">
+            <div class="card">
+                <h2>🔬 Science Practice</h2>
+                <select id="scienceLevel" onchange="newSubjectQuestion('science')" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem; margin-bottom: 1rem;"><option value="elementary">🌱 Elementary (K-5)</option><option value="middle" selected>⭐ Middle School (6-8)</option><option value="high">🔥 High School (9-12)</option><option value="advanced">🚀 Advanced / College</option></select>
+                <div class="problem-display" id="scienceQuestion">Pick a level, then click "New Question"!</div>
+                <div id="scienceOptions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;"></div>
+                <div id="scienceResult" style="text-align: center; font-size: 1.3rem; font-weight: 600; min-height: 2rem;"></div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="newSubjectQuestion('science')">New Question</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🏛️ History Practice -->
+        <section id="history" class="section">
+            <div class="card">
+                <h2>🏛️ History Practice</h2>
+                <select id="historyLevel" onchange="newSubjectQuestion('history')" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem; margin-bottom: 1rem;"><option value="elementary">🌱 Elementary (K-5)</option><option value="middle" selected>⭐ Middle School (6-8)</option><option value="high">🔥 High School (9-12)</option><option value="advanced">🚀 Advanced / College</option></select>
+                <div class="problem-display" id="historyQuestion">Pick a level, then click "New Question"!</div>
+                <div id="historyOptions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;"></div>
+                <div id="historyResult" style="text-align: center; font-size: 1.3rem; font-weight: 600; min-height: 2rem;"></div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="newSubjectQuestion('history')">New Question</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🌍 Social Studies -->
+        <section id="social" class="section">
+            <div class="card">
+                <h2>🌍 Social Studies</h2>
+                <select id="socialLevel" onchange="newSubjectQuestion('social')" style="padding: 0.8rem; border: 2px solid var(--secondary); border-radius: 12px; font-family: 'Fredoka'; font-size: 1rem; margin-bottom: 1rem;"><option value="elementary">🌱 Elementary (K-5)</option><option value="middle" selected>⭐ Middle School (6-8)</option><option value="high">🔥 High School (9-12)</option><option value="advanced">🚀 Advanced / College</option></select>
+                <div class="problem-display" id="socialQuestion">Pick a level, then click "New Question"!</div>
+                <div id="socialOptions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;"></div>
+                <div id="socialResult" style="text-align: center; font-size: 1.3rem; font-weight: 600; min-height: 2rem;"></div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="newSubjectQuestion('social')">New Question</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="achievements" class="section">
+            <div class="card">
+                <h2>🏅 Achievements</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem;" id="achievementGrid"></div>
+            </div>
+        </section>
+
+        <!-- Flashcards -->
+        <section id="flashcards" class="section">
+            <div class="card">
+                <h2>📇 Smart Flashcards</h2>
+                <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                    <input type="text" id="cardTerm" placeholder="Term/Question">
+                    <input type="text" id="cardDef" placeholder="Definition/Answer">
+                    <button class="btn" onclick="addCard()">Create Card</button>
+                </div>
+                <div id="cardsList"></div>
+            </div>
+        </section>
+
+        <!-- SANDBOX (Teachers Only) -->
+        <section id="sandbox" class="section">
+            <div class="card">
+                <h2>🔧 Code Sandbox (Teachers Only)</h2>
+                <p style="color: #666; margin-bottom: 1rem;">🚀 Make sure your StudyWallLearning.5.1 repo has an <code>index.html</code> file!</p>
+                <button class="sandbox-btn" onclick="openSandbox()">📂 Open Sandbox (5.1)</button>
+                <div style="margin-top: 1rem; padding: 1rem; background: var(--light); border-radius: 12px; border-left: 4px solid var(--primary);">
+                    <p style="font-size: 0.9rem; color: #666;">
+                        💡 <strong>GitHub Pages Tip:</strong> Rename your main HTML file to <code>index.html</code> in the StudyWallLearning.4.8 repo so GitHub Pages serves it instead of README.md
+                    </p>
+                </div>
+                <iframe id="sandboxFrame" class="sandbox-container" title="Code Sandbox" style="margin-top: 2rem;"></iframe>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const storage = {
+            save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
+            load: (key) => JSON.parse(localStorage.getItem(key) || 'null'),
+            remove: (key) => localStorage.removeItem(key)
+        };
+
+        // DEMO ACCOUNTS
+        const demoAccounts = {
+            'demo@student.com': { name: 'Demo Student', role: 'student', email: 'demo@student.com' },
+            'demo@teacher.com': { name: 'Demo Teacher', role: 'teacher', email: 'demo@teacher.com' },
+            'saahir@studyhub.com': { name: 'Saahir', role: 'student', email: 'saahir@studyhub.com' },
+            'teacher@studyhub.com': { name: 'Teacher', role: 'teacher', email: 'teacher@studyhub.com' }
+        };
+
+        let currentUser = storage.load('currentUser') || null;
+        let allUsers = storage.load('allUsers') || demoAccounts;
+
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.login-tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showNotification(msg, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `notification`;
+            div.textContent = msg;
+            if (type === 'error') div.style.borderLeftColor = 'var(--primary)';
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) {
+                showNotification('Please enter an email', 'error');
+                return;
+            }
+            if (allUsers[email]) {
+                currentUser = allUsers[email];
+                storage.save('currentUser', currentUser);
+                showNotification('✅ Logged in!');
+                showApp();
+            } else {
+                showNotification('Account not found', 'error');
+            }
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const role = document.getElementById('accountType').value;
+            if (!name || !email) {
+                showNotification('Please fill all fields', 'error');
+                return;
+            }
+            if (allUsers[email]) {
+                showNotification('Email already exists', 'error');
+                return;
+            }
+            allUsers[email] = { name, role, email };
+            storage.save('allUsers', allUsers);
+            currentUser = allUsers[email];
+            storage.save('currentUser', currentUser);
+            showNotification('✅ Account created!');
+            showApp();
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                currentUser = null;
+                storage.remove('currentUser');
+                location.reload();
+            }
+        }
+
+        function showApp() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role === 'teacher' ? '👨‍🏫 Teacher' : '👨‍🎓 Student';
+            
+            // Show sandbox only for teachers
+            if (currentUser.role === 'teacher') {
+                document.getElementById('sandboxNav').style.display = 'block';
+            }
+
+            initApp();
+        }
+
+        // SANDBOX
+        function openSandbox() {
+            const frame = document.getElementById('sandboxFrame');
+            // Try index.html first, then fallback to directory
+            frame.src = 'https://saahirtsharma-hub.github.io/StudyWallLearning.5.1/index.html';
+            frame.onload = () => showNotification('✅ Sandbox loaded!');
+            frame.onerror = () => {
+                // Try without index.html
+                frame.src = 'https://saahirtsharma-hub.github.io/StudyWallLearning.5.1/';
+                frame.onerror = () => showNotification('❌ Sandbox URL not accessible', 'error');
+            };
+            showNotification('🔧 Loading Sandbox...');
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById(btn.dataset.section).classList.add('active');
+                btn.classList.add('active');
+            });
+        });
+
+        // WHEEL
+        let wheelItems = storage.load('wheelItems') || ['Math', 'English', 'Science', 'History', 'Art', 'Music'];
+        let wheelSpinning = false;
+        let wheelRotation = 0;
+        const wheelCanvas = document.getElementById('wheelCanvas');
+        const wheelCtx = wheelCanvas.getContext('2d');
+        const wheelColors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#A86DD1', '#5DADE2', '#FFA07A', '#98D8C8', '#FF9FF3'];
+
+        function drawWheel() {
+            const centerX = wheelCanvas.width / 2;
+            const centerY = wheelCanvas.height / 2;
+            const radius = 180;
+            wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+            wheelCtx.save();
+            wheelCtx.translate(centerX, centerY);
+            wheelCtx.rotate(wheelRotation);
+            const sliceAngle = (Math.PI * 2) / wheelItems.length;
+            wheelItems.forEach((item, i) => {
+                wheelCtx.beginPath();
+                wheelCtx.arc(0, 0, radius, i * sliceAngle, (i + 1) * sliceAngle);
+                wheelCtx.lineTo(0, 0);
+                wheelCtx.fillStyle = wheelColors[i % wheelColors.length];
+                wheelCtx.fill();
+                wheelCtx.strokeStyle = 'white';
+                wheelCtx.lineWidth = 3;
+                wheelCtx.stroke();
+                wheelCtx.save();
+                wheelCtx.rotate((i + 0.5) * sliceAngle);
+                wheelCtx.textAlign = 'center';
+                wheelCtx.fillStyle = 'white';
+                wheelCtx.font = 'bold 16px Fredoka';
+                wheelCtx.fillText(item, radius * 0.65, 5);
+                wheelCtx.restore();
+            });
+            wheelCtx.beginPath();
+            wheelCtx.arc(0, 0, 25, 0, Math.PI * 2);
+            wheelCtx.fillStyle = '#2C3E50';
+            wheelCtx.fill();
+            wheelCtx.restore();
+            wheelCtx.beginPath();
+            wheelCtx.moveTo(centerX + radius - 20, centerY);
+            wheelCtx.lineTo(centerX + radius + 20, centerY - 15);
+            wheelCtx.lineTo(centerX + radius + 20, centerY + 15);
+            wheelCtx.closePath();
+            wheelCtx.fillStyle = '#2C3E50';
+            wheelCtx.fill();
+            const list = document.getElementById('wheelItemsList');
+            list.innerHTML = wheelItems.map((item, i) => `<div class="wheel-item-tag">${item}<button onclick="removeWheelItem(${i})">×</button></div>`).join('');
+        }
+
+        function addWheelItem() {
+            const input = document.getElementById('wheelItemInput');
+            if (input.value.trim() && wheelItems.length < 12) {
+                wheelItems.push(input.value.trim());
+                storage.save('wheelItems', wheelItems);
+                drawWheel();
+                input.value = '';
+                showNotification('Item added!');
+            }
+        }
+
+        function removeWheelItem(i) {
+            wheelItems.splice(i, 1);
+            storage.save('wheelItems', wheelItems);
+            drawWheel();
+        }
+
+        function resetWheel() {
+            wheelItems = ['Math', 'English', 'Science', 'History', 'Art', 'Music'];
+            wheelRotation = 0;
+            storage.save('wheelItems', wheelItems);
+            drawWheel();
+        }
+
+        function spinWheel() {
+            if (wheelSpinning || wheelItems.length === 0) return;
+            wheelSpinning = true;
+            const spinTime = 3000;
+            const spinRotations = 5 + Math.random() * 5;
+            const targetRotation = wheelRotation + (Math.PI * 2 * spinRotations);
+            const startRotation = wheelRotation;
+            const startTime = Date.now();
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / spinTime, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                wheelRotation = startRotation + (targetRotation - startRotation) * easeOut;
+                drawWheel();
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    wheelSpinning = false;
+                    const normalizedRotation = wheelRotation % (Math.PI * 2);
+                    const sliceAngle = (Math.PI * 2) / wheelItems.length;
+                    const selectedIndex = Math.floor((Math.PI * 2 - normalizedRotation) / sliceAngle) % wheelItems.length;
+                    const result = wheelItems[selectedIndex];
+                    document.getElementById('wheelResult').textContent = `🎉 Result: ${result}!`;
+                    showNotification(`You landed on: ${result}!`);
+                }
+            }
+            animate();
+        }
+
+        // HOMEWORK
+        let homeworkList = storage.load('homework') || [];
+        function renderHomework() {
+            const container = document.getElementById('homeworkList');
+            container.innerHTML = homeworkList.map((hw, i) => `
+                <div class="homework-item ${hw.completed ? 'completed' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="homework-title">${hw.title}</div>
+                            <span class="homework-subject">${hw.subject}</span>
+                            <div style="color: #666; margin-top: 0.5rem;">${hw.description}</div>
+                            <div class="homework-due">Due: ${hw.dueDate}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="toggleHW(${i})">${hw.completed ? '✓ Completed' : 'Mark Complete'}</button>
+                        <button class="btn btn-accent" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="deleteHW(${i})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+            updateStats();
+        }
+
+        function addHomework() {
+            const title = document.getElementById('hwTitle').value.trim();
+            const subject = document.getElementById('hwSubject').value.trim();
+            const desc = document.getElementById('hwDescription').value.trim();
+            const due = document.getElementById('hwDueDate').value;
+            if (title && subject && due) {
+                homeworkList.push({ title, subject, description: desc, dueDate: due, completed: false });
+                storage.save('homework', homeworkList);
+                renderHomework();
+                document.getElementById('hwTitle').value = '';
+                document.getElementById('hwSubject').value = '';
+                document.getElementById('hwDescription').value = '';
+                document.getElementById('hwDueDate').value = '';
+                showNotification('Assignment added!');
+            }
+        }
+
+        function toggleHW(i) {
+            homeworkList[i].completed = !homeworkList[i].completed;
+            storage.save('homework', homeworkList);
+            renderHomework();
+        }
+
+        function deleteHW(i) {
+            homeworkList.splice(i, 1);
+            storage.save('homework', homeworkList);
+            renderHomework();
+        }
+
+        // TIMER
+        let timerSeconds = 1500;
+        let timerInterval = null;
+        let timerRunning = false;
+        const origTimerSeconds = 1500;
+        let totalStudyTime = storage.load('studyTime') || 0;
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60);
+            const s = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            const progress = ((origTimerSeconds - timerSeconds) / origTimerSeconds) * 100;
+            document.getElementById('timerProgress').style.width = progress + '%';
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            timerRunning = true;
+            document.getElementById('timerLabel').textContent = 'Focus time! 🎯';
+            timerInterval = setInterval(() => {
+                if (timerSeconds > 0) {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    pauseTimer();
+                    document.getElementById('timerLabel').textContent = '🎉 Time\'s up!';
+                    totalStudyTime += Math.floor(origTimerSeconds / 60);
+                    storage.save('studyTime', totalStudyTime);
+                    updateStats();
+                    showNotification('Great session! 🎉');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('timerLabel').textContent = 'Paused ⏸️';
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = origTimerSeconds;
+            updateTimerDisplay();
+            document.getElementById('timerLabel').textContent = 'Ready to focus!';
+        }
+
+        function setTimer(minutes) {
+            pauseTimer();
+            timerSeconds = minutes * 60;
+            updateTimerDisplay();
+            document.getElementById('timerLabel').textContent = `Timer set to ${minutes} minutes`;
+        }
+
+        // MATH
+        let mathStats = storage.load('mathStats') || { correct: 0, total: 0 };
+        let currentMathAnswer = null;
+        let usedProblems = [];
+
+        // Operand ranges for each grade: add/sub, mul (A x B), div (divisor x quotient)
+        const mathLevels = {
+            1: { add: [1, 10],   sub: [1, 10],   mulA: [1, 2],    mulB: [1, 5],    divB: [1, 5],    divQ: [1, 5] },
+            2: { add: [1, 20],   sub: [1, 20],   mulA: [1, 5],    mulB: [1, 5],    divB: [1, 5],    divQ: [1, 5] },
+            3: { add: [10, 100], sub: [10, 100], mulA: [1, 10],   mulB: [1, 5],    divB: [2, 5],    divQ: [1, 10] },
+            4: { add: [100, 500], sub: [100, 500], mulA: [1, 12], mulB: [1, 12],   divB: [2, 9],    divQ: [1, 12] },
+            5: { add: [100, 999], sub: [100, 999], mulA: [10, 99], mulB: [2, 9],   divB: [2, 12],   divQ: [10, 50] },
+            6: { add: [1000, 9999], sub: [1000, 9999], mulA: [10, 99], mulB: [10, 20], divB: [6, 20], divQ: [10, 99] },
+            7: { add: [1000, 9999], sub: [1000, 9999], mulA: [11, 99], mulB: [11, 99], divB: [11, 25], divQ: [11, 99] },
+            8: { add: [1000, 99999], sub: [1000, 99999], mulA: [100, 500], mulB: [11, 50], divB: [11, 50], divQ: [11, 99] },
+            9: { add: [1000, 99999], sub: [1000, 99999], mulA: [100, 999], mulB: [11, 99], divB: [11, 50], divQ: [100, 999] }
+        };
+
+        function randRange(range) {
+            return Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0];
+        }
+
+        function generateMathProblem() {
+            const level = mathLevels[document.getElementById('mathLevel').value] || mathLevels[4];
+            const ops = ['+', '-', '×', '÷'];
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            let num1, num2, problem;
+
+            do {
+                if (op === '+') {
+                    num1 = randRange(level.add);
+                    num2 = randRange(level.add);
+                    currentMathAnswer = num1 + num2;
+                } else if (op === '-') {
+                    num1 = randRange(level.sub);
+                    num2 = Math.floor(Math.random() * (num1 + 1));
+                    currentMathAnswer = num1 - num2;
+                } else if (op === '×') {
+                    num1 = randRange(level.mulA);
+                    num2 = randRange(level.mulB);
+                    currentMathAnswer = num1 * num2;
+                } else {
+                    num2 = randRange(level.divB);
+                    currentMathAnswer = randRange(level.divQ);
+                    num1 = num2 * currentMathAnswer;
+                }
+                problem = `${num1} ${op} ${num2}`;
+            } while (usedProblems.includes(problem) && usedProblems.length < 50);
+
+            usedProblems.push(problem);
+            if (usedProblems.length > 20) usedProblems.shift();
+            document.getElementById('mathProblem').textContent = `${problem} = ?`;
+            document.getElementById('mathAnswer').value = '';
+        }
+
+        function checkMathAnswer() {
+            const answer = parseFloat(document.getElementById('mathAnswer').value);
+            if (isNaN(answer)) {
+                showNotification('Enter a number!', 'error');
+                return;
+            }
+            mathStats.total++;
+            if (Math.abs(answer - currentMathAnswer) < 0.01) {
+                mathStats.correct++;
+                showNotification('🎉 Correct!');
+                document.getElementById('mathProblem').style.borderColor = 'var(--secondary)';
+            } else {
+                showNotification(`Not quite! Answer: ${currentMathAnswer}`, 'error');
+                document.getElementById('mathProblem').style.borderColor = 'var(--primary)';
+            }
+            storage.save('mathStats', mathStats);
+            updateMathStats();
+            setTimeout(() => {
+                document.getElementById('mathProblem').style.borderColor = 'var(--secondary)';
+                generateMathProblem();
+            }, 1500);
+        }
+
+        function updateMathStats() {
+            document.getElementById('mathCorrect').textContent = mathStats.correct;
+            document.getElementById('mathTotal').textContent = mathStats.total;
+            const accuracy = mathStats.total > 0 ? Math.round((mathStats.correct / mathStats.total) * 100) : 0;
+            document.getElementById('mathAccuracy').textContent = accuracy + '%';
+        }
+
+        function resetMathScore() {
+            if (confirm('Reset score?')) {
+                mathStats = { correct: 0, total: 0 };
+                usedProblems = [];
+                storage.save('mathStats', mathStats);
+                updateMathStats();
+                generateMathProblem();
+            }
+        }
+
+        // ENGLISH
+        const vocab = {
+            elementary: [
+                { word: 'Happy', definition: 'Feeling or showing pleasure', example: 'I feel happy today!' },
+                { word: 'Brave', definition: 'Not afraid; showing courage', example: 'The brave knight fought the dragon.' },
+                { word: 'Curious', definition: 'Eager to know something', example: 'The curious cat explored the house.' },
+                { word: 'Generous', definition: 'Giving freely', example: 'She was generous with her toys.' },
+                { word: 'Kind', definition: 'Friendly and caring', example: 'He was kind to everyone.' }
+            ],
+            middle: [
+                { word: 'Eloquent', definition: 'Fluent and persuasive speaker', example: 'Her eloquent speech moved everyone.' },
+                { word: 'Meticulous', definition: 'Very careful and precise', example: 'He was meticulous in his work.' },
+                { word: 'Resilient', definition: 'Able to recover quickly', example: 'The resilient community rebuilt.' },
+                { word: 'Tenacious', definition: 'Holding firmly; persistent', example: 'She was tenacious in achieving her goals.' },
+                { word: 'Vibrant', definition: 'Full of energy and life', example: 'The vibrant colors filled the room.' }
+            ],
+            high: [
+                { word: 'Ambiguous', definition: 'Having more than one meaning', example: 'The statement was ambiguous.' },
+                { word: 'Astute', definition: 'Quick to understand; clever', example: 'His astute observations were insightful.' },
+                { word: 'Coherent', definition: 'Logical and consistent', example: 'Her coherent argument convinced everyone.' },
+                { word: 'Discern', definition: 'To perceive or recognize', example: 'He could discern subtle differences.' },
+                { word: 'Ephemeral', definition: 'Lasting a short time', example: 'Beauty is often ephemeral.' }
+            ],
+            advanced: [
+                { word: 'Ameliorate', definition: 'To make better', example: 'Policies to ameliorate poverty.' },
+                { word: 'Antithesis', definition: 'Direct opposite', example: 'Chaos is the antithesis of order.' },
+                { word: 'Ebullient', definition: 'Full of energy and enthusiasm', example: 'Her ebullient personality was contagious.' },
+                { word: 'Elucidate', definition: 'To explain clearly', example: 'Please elucidate your point.' },
+                { word: 'Hegemony', definition: 'Dominance or leadership', example: 'Cultural hegemony in media.' }
+            ]
+        };
+
+        let currentWord = null;
+        let defVisible = false;
+        let wordsCount = storage.load('wordsLearned') || 0;
+
+        function showNewWord() {
+            const level = document.getElementById('vocabLevel').value;
+            currentWord = vocab[level][Math.floor(Math.random() * vocab[level].length)];
+            document.getElementById('vocabWord').textContent = currentWord.word;
+            document.getElementById('vocabDefinition').textContent = currentWord.definition;
+            document.getElementById('vocabExample').textContent = `"${currentWord.example}"`;
+            defVisible = true;
+            wordsCount++;
+            storage.save('wordsLearned', wordsCount);
+            document.getElementById('wordsLearned').textContent = wordsCount;
+        }
+
+
+        // ===== SCIENCE / HISTORY / SOCIAL STUDIES QUIZZES =====
+        // Each question: [question, correct answer, wrong answer, wrong answer, wrong answer]
+        const subjectBanks = {
+            science: {
+                elementary: [
+                    ['What do plants need to make food?', 'Sunlight', 'Candy', 'Sand', 'Plastic'],
+                    ['What is the closest star to Earth?', 'The Sun', 'The Moon', 'Mars', 'Venus'],
+                    ['What is water when it freezes?', 'Ice', 'Steam', 'Mud', 'Fog'],
+                    ['Which animal is a mammal?', 'Dolphin', 'Shark', 'Frog', 'Lizard'],
+                    ['What do we call the force that pulls things down?', 'Gravity', 'Magnetism', 'Friction', 'Sound']
+                ],
+                middle: [
+                    ['What is the powerhouse of the cell?', 'Mitochondria', 'Nucleus', 'Ribosome', 'Cell wall'],
+                    ['What gas do plants absorb from the air?', 'Carbon dioxide', 'Oxygen', 'Nitrogen', 'Helium'],
+                    ['What is the chemical symbol for gold?', 'Au', 'Ag', 'Gd', 'Go'],
+                    ['What type of rock forms from cooled lava?', 'Igneous', 'Sedimentary', 'Metamorphic', 'Fossil'],
+                    ['What is the unit of force?', 'Newton', 'Joule', 'Watt', 'Pascal']
+                ],
+                high: [
+                    ['What is the pH of a neutral solution at 25°C?', '7', '0', '14', '1'],
+                    ['Which law states F = ma?', "Newton's Second Law", "Newton's First Law", "Hooke's Law", "Ohm's Law"],
+                    ['What particle has a negative charge?', 'Electron', 'Proton', 'Neutron', 'Photon'],
+                    ['What is the main function of DNA?', 'Store genetic information', 'Transport oxygen', 'Digest food', 'Produce hormones'],
+                    ['What is the speed of light approximately?', '300,000 km/s', '30,000 km/s', '3,000 km/s', '300 km/s']
+                ],
+                advanced: [
+                    ['What is Avogadro\'s number approximately?', '6.02 × 10²³', '3.14 × 10⁸', '9.81 × 10⁰', '1.60 × 10⁻¹⁹'],
+                    ['In quantum mechanics, what does the Heisenberg principle limit?', 'Simultaneous precision of position and momentum', 'Speed of electrons', 'Temperature of atoms', 'Mass of protons'],
+                    ['What enzyme unwinds DNA during replication?', 'Helicase', 'Ligase', 'Polymerase', 'Protease'],
+                    ['What is the second law of thermodynamics about?', 'Entropy always increases in an isolated system', 'Energy can be created', 'Heat flows cold to hot', 'Absolute zero is reachable'],
+                    ['Which element has the highest electronegativity?', 'Fluorine', 'Oxygen', 'Chlorine', 'Nitrogen']
+                ]
+            },
+            history: {
+                elementary: [
+                    ['Who was the first President of the United States?', 'George Washington', 'Abraham Lincoln', 'Thomas Jefferson', 'John Adams'],
+                    ['In which year did Columbus sail to the Americas?', '1492', '1776', '1812', '1066'],
+                    ['What holiday celebrates the country\'s independence in the US?', 'July 4th', 'December 25th', 'October 31st', 'January 1st'],
+                    ['Who discovered penicillin?', 'Alexander Fleming', 'Marie Curie', 'Isaac Newton', 'Louis Pasteur'],
+                    ['What ancient people built the pyramids in Giza?', 'Egyptians', 'Romans', 'Vikings', 'Mayans']
+                ],
+                middle: [
+                    ['When did World War I begin?', '1914', '1939', '1918', '1905'],
+                    ['Which document was signed in 1215 limiting the English king\'s power?', 'Magna Carta', 'Bill of Rights', 'Declaration of Independence', 'Treaty of Paris'],
+                    ['Who led India\'s nonviolent independence movement?', 'Mahatma Gandhi', 'Jawaharlal Nehru', 'Subhas Chandra Bose', 'Bhagat Singh'],
+                    ['What wall fell in 1989, symbolizing the end of the Cold War?', 'Berlin Wall', 'Great Wall', 'Hadrian\'s Wall', 'Western Wall'],
+                    ['Which empire was ruled by Julius Caesar?', 'Roman Empire', 'Ottoman Empire', 'Mongol Empire', 'Persian Empire']
+                ],
+                high: [
+                    ['What treaty ended World War I?', 'Treaty of Versailles', 'Treaty of Paris', 'Treaty of Utrecht', 'Treaty of Tordesillas'],
+                    ['Which dynasty built the Forbidden City?', 'Ming', 'Han', 'Tang', 'Yuan'],
+                    ['Who was the leader of the Soviet Union during most of WWII?', 'Joseph Stalin', 'Vladimir Lenin', 'Nikita Khrushchev', 'Leon Trotsky'],
+                    ['The Mughal emperor Akbar was known for what?', 'Religious tolerance and administrative reforms', 'Building the Taj Mahal alone', 'Conquering Japan', 'Founding the Maurya dynasty'],
+                    ['What was the main cause of the French Revolution?', 'Financial crisis and inequality', 'Religious war', 'Invasion by Spain', 'A famine in Italy']
+                ],
+                advanced: [
+                    ['What was the outcome of the Peace of Westphalia (1648)?', 'Foundations of modern state sovereignty', 'Creation of the League of Nations', 'End of the Ottoman Empire', 'Start of the Hundred Years War'],
+                    ['Which economic system did the Bretton Woods conference establish?', 'Fixed exchange rates tied to the US dollar', 'Global gold standard abolition', 'Soviet central planning', 'Free-floating currencies'],
+                    ['The Meiji Restoration (1868) primarily did what?', 'Modernized Japan along Western lines', 'Ended Japanese isolation by force alone', 'Restored the Tokugawa shogunate', 'Created the Silk Road'],
+                    ['What was the Marshall Plan?', 'US aid to rebuild post-war Western Europe', 'A Soviet trade agreement', 'A naval treaty', 'A colonial tax reform'],
+                    ['Which 1955 gathering promoted non-alignment among newly independent nations?', 'Bandung Conference', 'Yalta Conference', 'Potsdam Conference', 'Geneva Conference']
+                ]
+            },
+            social: {
+                elementary: [
+                    ['What is the capital city of India?', 'New Delhi', 'Mumbai', 'Kolkata', 'Chennai'],
+                    ['How many continents are there?', '7', '5', '6', '8'],
+                    ['What do we call a leader who is elected by the people?', 'A representative', 'A monarch', 'A soldier', 'A judge'],
+                    ['Which ocean is the largest?', 'Pacific Ocean', 'Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean'],
+                    ['What is a map that shows countries?', 'Political map', 'Weather map', 'Road map', 'Star map']
+                ],
+                middle: [
+                    ['What is the longest river in the world?', 'Nile', 'Amazon', 'Yangtze', 'Mississippi'],
+                    ['What is the name for the imaginary line at 0° latitude?', 'Equator', 'Prime Meridian', 'Tropic of Cancer', 'Arctic Circle'],
+                    ['What type of government has power divided between national and state levels?', 'Federal', 'Unitary', 'Monarchy', 'Dictatorship'],
+                    ['What is the main purpose of a constitution?', 'Set out the basic rules of government', 'Collect taxes', 'Fight wars', 'Build roads'],
+                    ['Which Indian state has the largest population?', 'Uttar Pradesh', 'Maharashtra', 'Bihar', 'West Bengal']
+                ],
+                high: [
+                    ['What does GDP measure?', 'Total value of goods and services produced', 'Total government debt', 'Average income only', 'Tax revenue'],
+                    ['What is the separation of powers?', 'Dividing government into legislative, executive and judicial branches', 'Splitting a country into states', 'Separating religion and state', 'Dividing land among farmers'],
+                    ['What does inflation mean?', 'A general rise in prices over time', 'A fall in unemployment', 'An increase in exports', 'A rise in interest rates only'],
+                    ['What is the main role of the United Nations?', 'Promote international peace and cooperation', 'Print world currency', 'Set national tax rates', 'Govern member states'],
+                    ['What is urbanization?', 'Growth of cities as people move from rural areas', 'Building new highways', 'Planting urban forests', 'Dividing cities into zones']
+                ],
+                advanced: [
+                    ['What economic theory argues for minimal government intervention?', 'Laissez-faire liberalism', 'Keynesian economics', 'Mercantilism', 'Marxism'],
+                    ['What does the Gini coefficient measure?', 'Income inequality', 'Population growth', 'Trade balance', 'Literacy rate'],
+                    ['What is a unicameral legislature?', 'A legislature with one chamber', 'A legislature with two chambers', 'A legislature with no elections', 'A court with one judge'],
+                    ['What is soft power in international relations?', 'Influence through culture and attraction rather than force', 'Military deterrence', 'Economic sanctions', 'Diplomatic immunity'],
+                    ['Which concept describes a society\'s shared norms and values?', 'Social contract', 'Market equilibrium', 'Fiscal policy', 'Sovereign immunity']
+                ]
+            }
+        };
+
+        const subjectState = {};
+
+        function newSubjectQuestion(subject) {
+            const level = document.getElementById(subject + 'Level').value;
+            const pool = subjectBanks[subject][level];
+            const used = subjectState[subject + level] || (subjectState[subject + level] = []);
+            let available = pool.filter((_, i) => !used.includes(i));
+            if (available.length === 0) { used.length = 0; available = pool; }
+            const idx = pool.indexOf(available[Math.floor(Math.random() * available.length)]);
+            used.push(idx);
+            const [q, correct, ...wrong] = pool[idx];
+            const options = [correct, ...wrong].sort(() => Math.random() - 0.5);
+            document.getElementById(subject + 'Question').textContent = q;
+            document.getElementById(subject + 'Result').textContent = '';
+            const box = document.getElementById(subject + 'Options');
+            box.innerHTML = '';
+            options.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'btn btn-secondary';
+                b.textContent = opt;
+                b.onclick = () => {
+                    const ok = opt === correct;
+                    const r = document.getElementById(subject + 'Result');
+                    r.textContent = ok ? '🎉 Correct!' : `❌ Not quite. Answer: ${correct}`;
+                    r.style.color = ok ? 'var(--secondary)' : 'var(--primary)';
+                };
+                box.appendChild(b);
+            });
+        }
+
+        // English quiz: multiple-choice, matches the selected grade level
+        let quizAnswerWord = null;
+        function showEnglishQuiz() {
+            const level = document.getElementById('quizLevel').value;
+            const pool = vocab[level];
+            const correct = pool[Math.floor(Math.random() * pool.length)];
+            const others = pool.filter(w => w !== correct).sort(() => Math.random() - 0.5).slice(0, 3);
+            const options = [correct, ...others].sort(() => Math.random() - 0.5);
+            quizAnswerWord = correct.word;
+            document.getElementById('quizQuestion').textContent = `Which word means: "${correct.definition}"?`;
+            const box = document.getElementById('quizOptions');
+            box.innerHTML = '';
+            options.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'btn btn-secondary';
+                b.textContent = opt.word;
+                b.onclick = () => {
+                    const ok = opt.word === quizAnswerWord;
+                    document.getElementById('quizResult').textContent = ok ? '🎉 Correct!' : `❌ Not quite. It was "${quizAnswerWord}".`;
+                    document.getElementById('quizResult').style.color = ok ? 'var(--secondary)' : 'var(--primary)';
+                };
+                box.appendChild(b);
+            });
+            document.getElementById('quizResult').textContent = '';
+        }
+
+        function toggleDefinition() {
+            defVisible = !defVisible;
+            document.getElementById('vocabDefinition').style.display = defVisible ? 'block' : 'none';
+            document.getElementById('vocabExample').style.display = defVisible ? 'block' : 'none';
+        }
+
+        function speakWord() {
+            if (currentWord && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(currentWord.word);
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ACHIEVEMENTS
+        function updateAchievements() {
+            const badges = [
+                { icon: '🥇', name: 'First Steps', check: () => homeworkList.length > 0 },
+                { icon: '🎓', name: 'Math Master', check: () => mathStats.total >= 20 && mathStats.correct >= 15 },
+                { icon: '⭐', name: 'Perfect Score', check: () => mathStats.correct > 0 && mathStats.correct === mathStats.total },
+                { icon: '📚', name: 'Word Collector', check: () => wordsCount >= 10 },
+                { icon: '🌍', name: 'Polyglot', check: () => wordsCount >= 50 },
+                { icon: '🎯', name: 'Focused Learner', check: () => totalStudyTime >= 60 },
+                { icon: '✅', name: 'Homework Hero', check: () => homeworkList.filter(h => h.completed).length >= 5 },
+                { icon: '🎪', name: 'Wheel Master', check: () => wheelItems.length > 8 },
+                { icon: '📇', name: 'Flashcard Expert', check: () => cardCount >= 5 },
+                { icon: '👑', name: 'Legend', check: () => mathStats.total >= 50 && wordsCount >= 50 && totalStudyTime >= 300 }
+            ];
+            const html = badges.map(b => `<div style="background: ${b.check() ? 'linear-gradient(135deg, var(--accent), #FFA07A)' : 'var(--light)'}; padding: 1.5rem; border-radius: 20px; text-align: center; border: 2px solid ${b.check() ? 'var(--accent)' : '#ddd'}; ${b.check() ? 'box-shadow: 0 0 20px rgba(255,230,109,0.3);' : ''}"><div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${b.icon}</div><div style="font-weight: 700; color: ${b.check() ? 'white' : 'var(--dark)'};">${b.name}</div></div>`).join('');
+            document.getElementById('achievementGrid').innerHTML = html;
+        }
+
+        // FLASHCARDS
+        let cardCount = storage.load('cardCount') || 0;
+        let cards = storage.load('cards') || [];
+
+        function addCard() {
+            const term = document.getElementById('cardTerm').value.trim();
+            const def = document.getElementById('cardDef').value.trim();
+            if (term && def) {
+                cards.push({ term, def, correct: 0, total: 0 });
+                cardCount++;
+                storage.save('cards', cards);
+                storage.save('cardCount', cardCount);
+                renderCards();
+                document.getElementById('cardTerm').value = '';
+                document.getElementById('cardDef').value = '';
+                showNotification('Card created!');
+            }
+        }
+
+        function renderCards() {
+            const html = cards.map((card, i) => `
+                <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem; cursor: pointer;" onclick="flipCard(${i})">
+                    <div style="font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">${card.term}</div>
+                    <div style="color: #666; display: none;" id="def${i}">${card.def}</div>
+                    <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; margin-right: 0.5rem;" onclick="markCorrect(${i})">✓ Got it</button>
+                    <button class="btn btn-accent" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="deleteCard(${i})">Delete</button>
+                </div>
+            `).join('');
+            document.getElementById('cardsList').innerHTML = html || '<p style="color: #888;">No cards yet!</p>';
+        }
+
+        function flipCard(i) {
+            const def = document.getElementById(`def${i}`);
+            def.style.display = def.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function markCorrect(i) {
+            cards[i].correct++;
+            cards[i].total++;
+            storage.save('cards', cards);
+            showNotification('Great! Card marked!');
+        }
+
+        function deleteCard(i) {
+            cards.splice(i, 1);
+            storage.save('cards', cards);
+            renderCards();
+        }
+
+        function updateStats() {
+            document.getElementById('totalHomework').textContent = homeworkList.length;
+            document.getElementById('totalStudyTime').textContent = totalStudyTime;
+        }
+
+        function initApp() {
+            drawWheel();
+            renderHomework();
+            updateTimerDisplay();
+            updateMathStats();
+            updateStats();
+            showNewWord();
+            updateAchievements();
+            renderCards();
+            document.getElementById('wordsLearned').textContent = wordsCount;
+
+            document.getElementById('wheelItemInput').addEventListener('keypress', e => {
+                if (e.key === 'Enter') addWheelItem();
+            });
+
+            document.getElementById('mathAnswer').addEventListener('keypress', e => {
+                if (e.key === 'Enter') checkMathAnswer();
+            });
+        }
+
+        // Check if logged in
+        if (currentUser) {
+            showApp();
+        }
+    </script>
+</body>
+</html>
